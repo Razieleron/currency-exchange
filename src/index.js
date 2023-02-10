@@ -18,16 +18,20 @@ async function getExchangeRate(fish) {
 
 function printElements(fish) {
   
-  const rate = fish.conversion_rates;
+  const conversionRate = fish.conversion_rates
+  const destination_currency = document.querySelector('#destination_currency').value;
+  const exchangeRate = conversionRate[destination_currency];
+  console.log("exchangeRate =", exchangeRate)
   console.log("fish.conversion_rates =", fish.conversion_rates);
-  console.log("rate =", rate);
+  console.log("fish.conversion_rates[0] =", fish.conversion_rates[0]);
+  console.log("rate =", exchangeRate);
 
   // console.log("rate: " rate)
   // const img = document.createElement('img');
   // img.setAttribute('src', fish.data[Math.floor(Math.random() * 24)].images.original.url);
   // img.setAttribute('class', 'gif');
   // document.querySelector('#where-the-api-info-goes').append(img);
-  document.querySelector('#where-the-api-info-goes').innerText = Array.from(fish.conversion_rates).join(' ');
+  document.querySelector('#where-the-api-info-goes').innerText = destination_currency + exchangeRate;
 }
 
 function printError(error, fish) {
@@ -36,9 +40,11 @@ function printError(error, fish) {
 
 function userInputForm(event) {
   event.preventDefault();
-  let fish = document.querySelector('#user-input').value;
-  document.querySelector('#user-input').value = null;
-  getExchangeRate(fish);
+  let currency = document.querySelector('#starting_currency').value;
+  document.querySelector('#starting_currency').value = null;
+  document.querySelector('#starting_value').value = null;
+  document.querySelector('#destination_currency').value = null;
+  getExchangeRate(currency);
 }
 
 window.addEventListener("load", function() {
