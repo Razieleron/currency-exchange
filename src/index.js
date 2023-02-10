@@ -1,35 +1,46 @@
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/styles.css';
-import Triangle from './js/triangle.js';
-import Rectangle from './js/rectangle.js';
+import ExchangeApiCall from './js/exchange.js';
 
-function handleTriangleForm(event) {
-  event.preventDefault();
-  document.querySelector('#response').innerText = null;
-  const length1 = parseInt(document.querySelector('#length1').value);
-  const length2 = parseInt(document.querySelector('#length2').value);
-  const length3 = parseInt(document.querySelector('#length3').value);
-  const triangle = new Triangle(length1, length2, length3);
-  const response = triangle.checkType();
-  const pTag = document.createElement("p");
-  pTag.append(`Your result is: ${response}.`);
-  document.querySelector('#response').append(pTag);
+// Business Logic
+
+async function getExchangeRate(fish) {
+  const response = await ExchangeApiCall.getExchangeRate(fish);
+  if (response.result) {
+    printElements(response, fish);
+  } else {
+    printError(response, fish);
+  }
 }
 
-function handleRectangleForm(event) {
+// UI Logic
+
+function printElements(fish) {
+  
+  const rate = fish.conversion_rates;
+  console.log("fish.conversion_rates =", fish.conversion_rates);
+  console.log("rate =", rate);
+
+  // console.log("rate: " rate)
+  // const img = document.createElement('img');
+  // img.setAttribute('src', fish.data[Math.floor(Math.random() * 24)].images.original.url);
+  // img.setAttribute('class', 'gif');
+  // document.querySelector('#where-the-api-info-goes').append(img);
+  document.querySelector('#where-the-api-info-goes').innerText = Array.from(fish.conversion_rates).join(' ');
+}
+
+function printError(error, fish) {
+  document.querySelector('#where-the-api-info-goes').innerText = `There was an error getting ${fish}: ${error}`;
+}
+
+function userInputForm(event) {
   event.preventDefault();
-  document.querySelector('#response2').innerText = null;
-  const length1 = parseInt(document.querySelector('#rect-length1').value);
-  const length2 = parseInt(document.querySelector('#rect-length2').value);
-  const rectangle = new Rectangle(length1, length2);
-  const response = rectangle.getArea();
-  const pTag = document.createElement("p");
-  pTag.append(`The area of the rectangle is ${response}.`);
-  document.querySelector('#response2').append(pTag);
+  let fish = document.querySelector('#user-input').value;
+  document.querySelector('#user-input').value = null;
+  getExchangeRate(fish);
 }
 
 window.addEventListener("load", function() {
-  document.querySelector("#triangle-checker-form").addEventListener("submit", handleTriangleForm);
-  document.querySelector("#rectangle-area-form").addEventListener("submit", handleRectangleForm);
+  document.querySelector("#user-input-form").addEventListener("submit", userInputForm);
 });
