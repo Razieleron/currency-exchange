@@ -1,4 +1,4 @@
-# (Application Name)
+# Currency Exchange!
 
 #### (Brief Description of Application)
 
