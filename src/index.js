@@ -17,21 +17,34 @@ async function getExchangeRate(fish) {
 // UI Logic
 
 function printElements(fish) {
+  const conversionRate = fish.conversion_rates;
+  let amount = document.querySelector('#starting_value').value;
+  let currency = document.querySelector('#destination_currency').value;
+  let result = document.querySelector('#where-the-api-info-goes');
   
-  const conversionRate = fish.conversion_rates
-  const destination_currency = document.querySelector('#destination_currency').value;
-  const exchangeRate = conversionRate[destination_currency];
-  console.log("exchangeRate =", exchangeRate)
-  console.log("fish.conversion_rates =", fish.conversion_rates);
-  console.log("fish.conversion_rates[0] =", fish.conversion_rates[0]);
-  console.log("rate =", exchangeRate);
+  
+  if(conversionRate){
+    for(const[key, value] of Object.entries(conversionRate)){
+      if (key === currency)
+      result.append(`${amount} ${key} = ${value*amount} ${currency} <br>` );
+      result.append(`1 USD = ${value} ${key} `);
+    }
+  }
+  // const destination_currency = document.querySelector('#destination_currency').value;
+  // const exchangeRate = conversionRate.destination_currency;
+  // console.log("exchangeRate =", exchangeRate)
+  // console.log("fullApiReturn =", fullApiReturn)
+  // // console.log("fish.conversion_rates.usd =", fish.conversion_rates["usd"]);
+  // console.log("fish.conversion_rates[0] =", fish.conversion_rates);
+  // console.log("rate =", exchangeRate);
+
 
   // console.log("rate: " rate)
   // const img = document.createElement('img');
   // img.setAttribute('src', fish.data[Math.floor(Math.random() * 24)].images.original.url);
   // img.setAttribute('class', 'gif');
   // document.querySelector('#where-the-api-info-goes').append(img);
-  document.querySelector('#where-the-api-info-goes').innerText = destination_currency + exchangeRate;
+  // document.querySelector('#where-the-api-info-goes').innerText = destination_currency + exchangeRate + fish;
 }
 
 function printError(error, fish) {
