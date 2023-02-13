@@ -4,47 +4,23 @@ import './css/styles.css';
 import ExchangeApiCall from './js/exchange.js';
 
 // Business Logic
-
-async function getExchangeRate(fish) {
-  const response = await ExchangeApiCall.getExchangeRate(fish);
+async function getExchangeRate(destinationCurrency) {
+  const response = await ExchangeApiCall.getExchangeRate(destinationCurrency);
   if (response.result) {
-    printElements(response, fish);
+    printElements(response, destinationCurrency);
   } else {
-    printError(response, fish);
+    printError(response, destinationCurrency);
   }
 }
 
 // UI Logic
-
-function printElements(fish) {
-  const conversionRate = fish.conversion_rates;
+function printElements(destinationCurrency) {
+  const conversionRate = destinationCurrency.conversion_rate;
+  console.log(conversionRate, " = Conversion Rate")
   let amount = document.querySelector('#starting_value').value;
   let currency = document.querySelector('#destination_currency').value;
   let result = document.querySelector('#where-the-api-info-goes');
-  
-  
-  if(conversionRate){
-    for(const[key, value] of Object.entries(conversionRate)){
-      if (key === currency)
-      result.append(`${amount} ${key} = ${value*amount} ${currency} <br>` );
-      result.append(`1 USD = ${value} ${key} `);
-    }
-  }
-  // const destination_currency = document.querySelector('#destination_currency').value;
-  // const exchangeRate = conversionRate.destination_currency;
-  // console.log("exchangeRate =", exchangeRate)
-  // console.log("fullApiReturn =", fullApiReturn)
-  // // console.log("fish.conversion_rates.usd =", fish.conversion_rates["usd"]);
-  // console.log("fish.conversion_rates[0] =", fish.conversion_rates);
-  // console.log("rate =", exchangeRate);
-
-
-  // console.log("rate: " rate)
-  // const img = document.createElement('img');
-  // img.setAttribute('src', fish.data[Math.floor(Math.random() * 24)].images.original.url);
-  // img.setAttribute('class', 'gif');
-  // document.querySelector('#where-the-api-info-goes').append(img);
-  // document.querySelector('#where-the-api-info-goes').innerText = destination_currency + exchangeRate + fish;
+  result.innerText = `${amount} of USD is equivalent to ${amount * conversionRate} of ${currency}`
 }
 
 function printError(error, fish) {
@@ -53,13 +29,13 @@ function printError(error, fish) {
 
 function userInputForm(event) {
   event.preventDefault();
-  let currency = document.querySelector('#starting_currency').value;
-  document.querySelector('#starting_currency').value = null;
-  document.querySelector('#starting_value').value = null;
-  document.querySelector('#destination_currency').value = null;
+  document.querySelector('#where-the-api-info-goes').innerText = ""
+  let amount = document.querySelector('#starting_value').value;
+  console.log(amount)
+  let currency = document.querySelector('#destination_currency').value;
   getExchangeRate(currency);
 }
 
 window.addEventListener("load", function() {
-  document.querySelector("#user-input-form").addEventListener("submit", userInputForm);
+  document.querySelector("#user-input-form").addEventListener("submit", userInputForm)
 });
