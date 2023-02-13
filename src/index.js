@@ -15,27 +15,29 @@ async function getExchangeRate(destinationCurrency) {
 
 // UI Logic
 function printElements(destinationCurrency) {
-  const conversionRate = destinationCurrency.conversion_rate;
-  console.log(conversionRate, " = Conversion Rate")
   let amount = document.querySelector('#starting_value').value;
   let currency = document.querySelector('#destination_currency').value;
   let result = document.querySelector('#where-the-api-info-goes');
-  result.innerText = `${amount} of USD is equivalent to ${amount * conversionRate} of ${currency}`
+  if (destinationCurrency) {
+    const conversionRate = destinationCurrency.conversion_rate;
+    result.innerText = `${amount} of USD is equivalent to ${amount * conversionRate} of ${currency}`;
+  } else {
+    let result = document.querySelector('#where-the-api-info-goes');
+    result.innerText = "That Currency Does Not Exist";
+  }
 }
 
-function printError(error, fish) {
-  document.querySelector('#where-the-api-info-goes').innerText = `There was an error getting ${fish}: ${error}`;
+function printError(error, destinationCurrency) {
+  document.querySelector('#where-the-api-info-goes').innerText = `There was an error getting ${destinationCurrency} : ${error}`;
 }
 
 function userInputForm(event) {
   event.preventDefault();
-  document.querySelector('#where-the-api-info-goes').innerText = ""
-  let amount = document.querySelector('#starting_value').value;
-  console.log(amount)
+  document.querySelector('#where-the-api-info-goes').innerText = "";
   let currency = document.querySelector('#destination_currency').value;
   getExchangeRate(currency);
 }
 
 window.addEventListener("load", function() {
-  document.querySelector("#user-input-form").addEventListener("submit", userInputForm)
+  document.querySelector("#user-input-form").addEventListener("submit", userInputForm);
 });
